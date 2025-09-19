@@ -1,1 +1,1 @@
-# next-prisma-base
+# Next-Prisma-Base
