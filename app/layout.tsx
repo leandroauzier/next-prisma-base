@@ -42,7 +42,7 @@ export default function RootLayout({
           </div>
 
           <main className="flex-1 ml-60 min-h-screen">
-            <div className="p-6">{children}</div>
+            <div className="p-6 mb-40">{children}</div>
             <Footer />
           </main>
         </SessionProvider>
