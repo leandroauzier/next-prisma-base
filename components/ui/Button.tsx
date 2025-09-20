@@ -7,6 +7,7 @@ type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
   label: string;
+  type?: "button" | "submit" | "reset";
   variant?: Variant;
   size?: Size;
   disabled?: boolean;
@@ -18,6 +19,7 @@ type ButtonProps = {
 
 export default function Button({
   label,
+  type = "button",
   variant = "primary",
   size = "md",
   disabled = false,
@@ -27,7 +29,7 @@ export default function Button({
   icon,
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all";
+    "select-none inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all";
 
   const variantStyles: Record<Variant, string> = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",

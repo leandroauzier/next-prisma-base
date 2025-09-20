@@ -1,10 +1,12 @@
 'use client'
 import Button from "@/components/ui/Button";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const router = useRouter()
+  const { data: session, status } = useSession();
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
 
@@ -26,9 +28,16 @@ export default function HomePage() {
         </p>
 
         <div className="flex gap-4">
+          {status !== "authenticated" &&
+            <Button
+              label="Fazer login"
+              variant="primary"
+              onClick={() => router.push("/dashboard")}
+            />
+          }
           <Button
             label="Entrar no Dashboard"
-            variant="primary"
+            variant="outline"
             onClick={() => router.push("/dashboard")}
           />
         </div>

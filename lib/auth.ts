@@ -1,10 +1,10 @@
-// lib/auth.ts
-import NextAuth from "next-auth";
+// lib/authOptions.ts
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcryptjs";
+import type { NextAuthOptions } from "next-auth";
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -33,23 +33,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   session: { strategy: "jwt" },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.role = (user as any).role ?? "user";
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-  },
   secret: process.env.AUTH_SECRET,
-});
+};
