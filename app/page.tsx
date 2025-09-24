@@ -32,7 +32,7 @@ export default function HomePage() {
             <Button
               label="Fazer login"
               variant="primary"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push("/login")}
             />
           }
           <Button
@@ -44,7 +44,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 bg-white shadow-inner">
+      <section className="py-12 bg-blue-100 shadow-inner">
         <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
           <div>
             <h3 className="text-xl font-semibold mb-2">🔒 Segurança</h3>

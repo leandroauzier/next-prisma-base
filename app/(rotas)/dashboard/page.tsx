@@ -37,7 +37,8 @@ export default function Dashboard() {
         <LineChartCard
           title="Usuários Ativos"
           description="Últimos 5 meses"
-          data={lineData}
+          // data={lineData}
+          apiUrl=""
         />
         <BarChartCard
           title="Inscrições por Curso"

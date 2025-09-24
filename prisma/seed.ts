@@ -1,5 +1,5 @@
-const { PrismaClient, Role } = require("@prisma/client");
-const { hash } = require("bcryptjs");
+import { PrismaClient, Role } from "@prisma/client";
+import { hash } from "bcryptjs";
 
 async function main() {
   const prisma = new PrismaClient();

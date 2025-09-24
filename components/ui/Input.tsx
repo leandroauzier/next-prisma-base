@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { maskCPF, maskPhone, maskCEP } from "@/utils/masks";
 
 type InputVariant = "default" | "error" | "success";
 type InputSize = "sm" | "md" | "lg";
@@ -17,6 +18,8 @@ type InputProps = {
   fullWidth?: boolean;
   disabled?: boolean;
   className?: string;
+  required?: boolean;
+  minLenght?: number;
 };
 
 export default function Input({
@@ -31,6 +34,8 @@ export default function Input({
   fullWidth = true,
   disabled = false,
   className = "",
+  required = false,
+  minLenght,
 }: InputProps) {
   const baseStyles =
     "rounded-md border focus:outline-none focus:ring-2 transition-all";
@@ -58,6 +63,14 @@ export default function Input({
     .filter(Boolean)
     .join(" ");
 
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (type === "cpf") e.target.value = maskCPF(e.target.value);
+    if (type === "phone") e.target.value = maskPhone(e.target.value);
+    if (type === "cep") e.target.value = maskCEP(e.target.value);
+
+    onChange?.(e);
+  }
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -68,12 +81,14 @@ export default function Input({
       <input
         id={name}
         name={name}
-        type={type}
+        type={["cpf", "phone", "cep"].includes(type) ? "text" : type}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         disabled={disabled}
         className={classes}
+        required={required}
+        minLength={minLenght}
       />
     </div>
   );

@@ -6,7 +6,7 @@ type Variant = "primary" | "secondary" | "danger" | "outline";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = {
-  label: string;
+  label?: string;
   type?: "button" | "submit" | "reset";
   variant?: Variant;
   size?: Size;
@@ -15,6 +15,7 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   icon?: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export default function Button({
@@ -27,9 +28,10 @@ export default function Button({
   onClick,
   className = "",
   icon,
+  children,
 }: ButtonProps) {
   const baseStyles =
-    "select-none inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all";
+    "select-none flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all";
 
   const variantStyles: Record<Variant, string> = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
@@ -58,7 +60,7 @@ export default function Button({
 
   return (
     <button onClick={onClick} disabled={disabled} className={classes}>
-      {icon && <span className="mr-2">{icon}</span>}
+      {icon && <span className={`${label ? 'mr-2' : 'mr-0'}`}>{icon}</span>}
       {label}
     </button>
   );

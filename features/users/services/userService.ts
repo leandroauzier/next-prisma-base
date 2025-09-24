@@ -1,3 +1,4 @@
+import { canDelete } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { Prisma, Role } from "@prisma/client";
 import { hash } from "bcryptjs";
@@ -71,7 +72,32 @@ export async function updateUser(id: string, input: UpdateUserInput) {
   return safeUser;
 }
 
-export async function deleteUser(id: string) {
-  await prisma.user.delete({ where: { id } });
+export async function deleteUser(currentUserId: string, targetUserId: string) {
+  const currentUser = await prisma.user.findUnique({
+    where: { id: currentUserId },
+    select: { id: true, role: true },
+  });
+
+  if (!currentUser) {
+    throw new Error("Usuário autenticado não encontrado.");
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { id: true, role: true },
+  });
+
+  if (!targetUser) {
+    throw new Error("Usuário a ser deletado não encontrado.");
+  }
+
+  const isAllowed = canDelete(currentUser.role as any, targetUser.role as any);
+
+  if (!isAllowed) {
+    throw new Error("Você não tem permissão para excluir este usuário.");
+  }
+
+  await prisma.user.delete({ where: { id: targetUserId } });
+
   return { message: "Usuário deletado com sucesso" };
 }
