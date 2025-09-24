@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TCE-AP",
-  description: "Tribunal de Contas do Estado do Amapá",
+  title: "SISGES",
+  description: "Sistema de gestão",
 };
 
 export default async function RootLayout({

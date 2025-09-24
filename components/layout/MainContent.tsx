@@ -8,7 +8,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
 
   return (
     <main
-      className={`flex-1 min-h-screen bg-zinc-100 transition-all duration-300 ${
+      className={`flex-1 p-10 min-h-screen bg-zinc-100 transition-all duration-300 ${
         collapsed ? "ml-16" : "ml-60"
       }`}
     >

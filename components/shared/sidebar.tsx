@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
 import Button from "../ui/Button";
+import Swal from "sweetalert2";
 
 type SidebarItem =
   | { label: string; href: string; icon?: React.ReactNode }
@@ -29,7 +30,7 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setCollapsed(true);
-      }else{
+      } else {
         setCollapsed(false);
       }
     };
@@ -41,13 +42,27 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
   const menuItems: SidebarItem[] =
     status === "authenticated"
       ? [
-          ...items,
-          {
-            label: "Sair",
-            icon: <IconLogout className="w-5 h-5" />,
-            action: () => signOut({ callbackUrl: "/login" }),
-          },
-        ]
+        ...items,
+        {
+          label: "Sair",
+          icon: <IconLogout className="w-5 h-5" />,
+          action: async () => {
+            const realizarLogout = await Swal.fire({
+              title: "Tem certeza?",
+              text: "Você será desconectado do sistema.",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Sim, sair",
+              cancelButtonText: "Cancelar",
+            });
+            if (realizarLogout.isConfirmed) {
+              signOut({ callbackUrl: "/login" });
+            }
+          }
+        },
+      ]
       : items;
 
   return (
@@ -88,11 +103,10 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
                 {"href" in item ? (
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-2 p-2 rounded-md transition-colors ${
-                      pathname === item.href
-                        ? "bg-gray-700 text-white"
-                        : "hover:bg-gray-700 text-gray-300"
-                    }`}
+                    className={`flex items-center gap-2 p-2 rounded-md transition-colors ${pathname === item.href
+                      ? "bg-gray-700 text-white"
+                      : "hover:bg-gray-700 text-gray-300"
+                      }`}
                   >
                     {item.icon && <span>{item.icon}</span>}
                     {!collapsed && <span>{item.label}</span>}
@@ -122,7 +136,7 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
 
         {/* Footer */}
         <div className="p-4 text-sm border-t border-gray-700">
-          {!collapsed && `© ${new Date().getFullYear()} TCE-AP`}
+          {!collapsed && `© ${new Date().getFullYear()} Sistema de Gestão`}
         </div>
       </aside>
     </>

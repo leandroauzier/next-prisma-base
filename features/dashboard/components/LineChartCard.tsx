@@ -1,18 +1,17 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import { useCallback, useEffect, useState } from "react";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
 } from "recharts";
-import Card from "@/components/ui/Card";
-import { useEffect, useState, useCallback } from "react";
-import { IconAlertCircle } from "@tabler/icons-react";
-import Button from "@/components/ui/Button";
 
 type LineChartCardProps = {
   title: string;
