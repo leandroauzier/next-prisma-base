@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.usuario.findUnique({
     where: { id: session.user.id },
     select: {
       id: true,
@@ -23,7 +23,7 @@ export async function GET() {
   });
 
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
   }
 
   return NextResponse.json(user);

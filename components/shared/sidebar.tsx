@@ -2,12 +2,11 @@
 "use client";
 
 import { useSidebar } from "@/context/sidebarContext";
-import { IconLogout, IconMenu2 } from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import Link from "next/link";
-import Button from "../ui/Button";
 import Swal from "sweetalert2";
 
 type SidebarItem =
@@ -65,6 +64,9 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
       ]
       : items;
 
+      console.log("Client session =>", session?.user);
+
+
   return (
     <>
       {/* Botão para colapsar no desktop */}
@@ -86,9 +88,9 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
               {session?.user?.email && (
                 <p className="text-xs text-gray-400 mt-1 truncate">{session.user.email}</p>
               )}
-              {session?.user?.role && (
+              {session?.user?.perfil && (
                 <p className="text-xs text-gray-400 mt-1">
-                  {(session.user.role as string).toUpperCase()}
+                  {(session.user.perfil as string).toUpperCase()}
                 </p>
               )}
             </>

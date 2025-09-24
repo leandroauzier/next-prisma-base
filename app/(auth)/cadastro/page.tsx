@@ -24,8 +24,8 @@ export default function CadastroPage() {
       cpf: formData.get("cpf") as string,
       email: formData.get("email") as string,
       telefone: formData.get("telefone") as string,
-      password: formData.get("password") as string,
-      role: "USER",
+      senha: formData.get("senha") as string,
+      perfil: "USUARIO",
     };
 
     try {

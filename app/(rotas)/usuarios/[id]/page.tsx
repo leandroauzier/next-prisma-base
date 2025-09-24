@@ -1,5 +1,5 @@
-import UserForm from "@/features/users/components/UserForm";
-import { getUserById, updateUser } from "@/features/users/services/userService";
+import UserForm from "@/features/usuarios/components/UserForm";
+import { getUserById, updateUser } from "@/features/usuarios/services/userService";
 import { redirect } from "next/navigation";
 
 export default async function UserPage({ params }: { params: { id: string } }) {

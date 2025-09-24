@@ -14,11 +14,11 @@ export const baseItems: MenuItem[] = [
 ];
 
 export const roleItems: Record<string, MenuItem[]> = {
-  ADMIN: [
-    { label: "Usuários", href: "/users", icon: <IconUsers className="w-5 h-5" /> },
+  ADMINISTRADOR: [
+    { label: "Usuários", href: "/usuarios", icon: <IconUsers className="w-5 h-5" /> },
   ],
-  DEV: [
-    { label: "Usuários", href: "/users", icon: <IconUsers className="w-5 h-5" /> },
+  DESENVOLVEDOR: [
+    { label: "Usuários", href: "/usuarios", icon: <IconUsers className="w-5 h-5" /> },
     { label: "Desenvolvedor", href: "/desenvolvedor", icon: <IconCode className="w-5 h-5" /> },
   ],
 };

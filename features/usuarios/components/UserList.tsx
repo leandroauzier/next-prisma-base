@@ -1,23 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { canDelete } from "@/lib/permissions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { deleteUser, SafeUser } from "../services/userService";
 import Swal from "sweetalert2";
+import UserModal from "./UserModal"; // modal de criação
 
 export default function UserList({ users }: { users: SafeUser[] }) {
   const router = useRouter();
   const { data: session } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const currentRole = (session?.user?.role ?? "USER").toUpperCase() as
-    | "DEV"
-    | "ADMIN"
-    | "USER";
+  const currentRole = (session?.user?.perfil ?? "USUARIO").toUpperCase() as
+    | "DESENVOLVEDOR"
+    | "ADMINISTRADOR"
+    | "USUARIO";
 
   async function handleDelete(userId: string, userRole: string) {
-
     const currentUserId = session?.user?.id;
 
     if (!currentUserId) {
@@ -68,6 +70,23 @@ export default function UserList({ users }: { users: SafeUser[] }) {
 
   return (
     <div className="w-full">
+      {/* Header com botão de novo usuário */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold">Lista de Usuários</h2>
+        <Button
+          label="Novo Usuário"
+          onClick={() => setIsModalOpen(true)}
+          className="bg-green-600 text-white px-3 py-1 rounded"
+        />
+      </div>
+
+      {/* Modal de criação */}
+      <UserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreated={() => router.refresh()}
+      />
+
       {/* Tabela desktop */}
       <table className="hidden md:table border w-full">
         <thead>
@@ -85,13 +104,13 @@ export default function UserList({ users }: { users: SafeUser[] }) {
               <td className="border px-2 py-1 flex gap-2">
                 <Button
                   label="Editar"
-                  onClick={() => router.push(`/users/${u.id}`)}
+                  onClick={() => router.push(`/usuarios/${u.id}`)}
                   className="text-blue-500"
                 />
-                {canDelete(currentRole, (u.role as any) ?? "USER") && (
+                {canDelete(currentRole, (u.perfil as any) ?? "USUARIO") && (
                   <Button
                     label="Deletar"
-                    onClick={() => handleDelete(u.id, u.role)}
+                    onClick={() => handleDelete(u.id, u.perfil)}
                     className="bg-red-500 text-white px-2 py-1 rounded"
                   />
                 )}

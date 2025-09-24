@@ -1,5 +1,5 @@
-import { getUsers } from "@/features/users/services/userService";
-import UserList from "@/features/users/components/UserList";
+import { getUsers } from "@/features/usuarios/services/userService";
+import UserList from "@/features/usuarios/components/UserList";
 
 export default async function UsersPage() {
   const users = await getUsers();

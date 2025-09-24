@@ -17,12 +17,12 @@ npx auth secret
 npx prisma generate
 ```
 
-### Em seguida para salvar no banco: 
+### Em seguida para salvar no banco:
 ```bash
 npx prisma db push
 ```
 
-### ⚠ OBS: Se quiser gerar a Seed base do projeto pra criar um usuário padrão com role **DEV**, rode o comando:
+### ⚠ OBS: Se quiser gerar a Seed base do projeto pra criar um usuário padrão com perfil **DEV**, rode o comando:
 ```bash
 npx prisma db seed
 ```

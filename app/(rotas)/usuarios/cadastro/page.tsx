@@ -1,5 +1,5 @@
-import UserForm from "@/features/users/components/UserForm";
-import { registerUser } from "@/features/users/services/userService";
+import UserForm from "@/features/usuarios/components/UserForm";
+import { registerUser } from "@/features/usuarios/services/userService";
 import { redirect } from "next/navigation";
 
 export default function NewUserPage() {

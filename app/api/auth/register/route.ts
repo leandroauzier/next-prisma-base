@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { registerUser } from "@/features/users/services/userService";
+import { registerUser } from "@/features/usuarios/services/userService";
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    if (!data.cpf || !data.nome || !data.email || !data.password || !data.nome) {
+    if (!data.cpf || !data.nome || !data.email || !data.senha) {
       return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
     }
 

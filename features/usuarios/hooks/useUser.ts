@@ -6,10 +6,10 @@ type User = {
   id: string;
   nome: string;
   email: string;
-  role?: string;
+  perfil?: string;
   cpf?: string;
   telefone?: string;
-  createdAt?: string;
+  criadoEm?: string;
 };
 
 export function useUsers(userId?: string) {

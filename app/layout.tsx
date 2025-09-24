@@ -2,10 +2,10 @@ import MainContent from "@/components/layout/MainContent";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import Sidebar from "@/components/shared/sidebar";
 import { SidebarProvider } from "@/context/sidebarContext";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { baseItems, roleItems } from "@/lib/menuItems";
 import type { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -30,9 +30,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  const role = session?.user?.role ?? "USER";
 
-  const menuItems = [...baseItems, ...(roleItems[role] ?? [])];
+
+  const perfil = (session?.user?.perfil ?? "USUARIO").toUpperCase();
+  const menuItems = [...baseItems, ...(roleItems[perfil] ?? [])];
+
+  console.log("SSR session =>", session?.user);
+
+
 
   return (
     <html lang="pt-BR">

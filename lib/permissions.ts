@@ -1,12 +1,12 @@
 // lib/permissions.ts
 export const roleHierarchy = {
-  DEV: 3,
-  ADMIN: 2,
-  USER: 1,
+  DESENVOLVEDOR: 3,
+  ADMINISTRADOR: 2,
+  USUARIO: 1,
 } as const;
 
-export type Role = keyof typeof roleHierarchy;
+export type Perfil = keyof typeof roleHierarchy;
 
-export function canDelete(currentRole: Role, targetRole: Role) {
+export function canDelete(currentRole: Perfil, targetRole: Perfil) {
   return roleHierarchy[currentRole] > roleHierarchy[targetRole];
 }

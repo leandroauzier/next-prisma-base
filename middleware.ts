@@ -3,9 +3,9 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const rolePermissions: Record<string, string[]> = {
-  DEV: ["/perfil", "/users", "/desenvolvedor"],
-  ADMIN: ["/perfil", "/users",],
-  USER: ["/perfil"],
+  DESENVOLVEDOR: ["/perfil", "/usuarios", "/desenvolvedor"],
+  ADMINISTRADOR: ["/perfil", "/usuarios",],
+  USUARIO: ["/perfil"],
 };
 
 export async function middleware(req: NextRequest) {
@@ -28,9 +28,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const role = ((token.role as string) ?? "USER").toUpperCase();
+  const perfil = ((token.perfil as string) ?? "USUARIO").toUpperCase();
 
-  const allowedRoutes = rolePermissions[role] ?? [];
+  const allowedRoutes = rolePermissions[perfil] ?? [];
 
   const isAllowed = allowedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
@@ -46,5 +46,5 @@ export async function middleware(req: NextRequest) {
 
 // Executa middleware só nas rotas que exigem controle
 export const config = {
-  matcher: ["/perfil/:path*", "/users/:path*", "/desenvolvedor/:path*"],
+  matcher: ["/perfil/:path*", "/usuarios/:path*", "/desenvolvedor/:path*"],
 };
