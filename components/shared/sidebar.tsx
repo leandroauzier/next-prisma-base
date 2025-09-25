@@ -64,7 +64,7 @@ export default function Sidebar({ items, title = "Sistema de Gestão" }: Sidebar
       ]
       : items;
 
-      console.log("Client session =>", session?.user);
+      // console.log("Client session =>", session?.user);
 
 
   return (

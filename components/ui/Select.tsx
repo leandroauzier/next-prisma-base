@@ -1,55 +1,52 @@
 "use client";
 
 import React from "react";
-import { maskCPF, maskPhone, maskCEP } from "@/utils/masks";
-import { normalizeWord } from "@/utils/normalize";
 
-type InputVariant = "default" | "error" | "success";
-type InputSize = "sm" | "md" | "lg";
+type SelectVariant = "default" | "error" | "success";
+type SelectSize = "sm" | "md" | "lg";
 
-type InputProps = {
+export type Option = {
+  label: string;
+  value: string;
+};
+
+type SelectProps = {
   label?: string;
   name: string;
-  type?: string;
-  placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  variant?: InputVariant;
-  size?: InputSize;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: Option[];
+  variant?: SelectVariant;
+  size?: SelectSize;
   fullWidth?: boolean;
   disabled?: boolean;
   className?: string;
   required?: boolean;
-  minLenght?: number;
-  maxLenght?: number;
 };
 
-export default function Input({
+export default function Select({
   label,
   name,
-  type = "text",
-  placeholder,
   value,
   onChange,
+  options,
   variant = "default",
   size = "md",
   fullWidth = true,
   disabled = false,
   className = "",
   required = false,
-  minLenght,
-  maxLenght,
-}: InputProps) {
+}: SelectProps) {
   const baseStyles =
-    "rounded-md border focus:outline-none focus:ring-2 transition-all";
+    "rounded-md border focus:outline-none focus:ring-2 transition-all bg-white";
 
-  const variantStyles: Record<InputVariant, string> = {
+  const variantStyles: Record<SelectVariant, string> = {
     default: "border-gray-300 focus:ring-blue-500 focus:border-blue-500",
     error: "border-red-500 focus:ring-red-500 focus:border-red-500",
     success: "border-green-500 focus:ring-green-500 focus:border-green-500",
   };
 
-  const sizeStyles: Record<InputSize, string> = {
+  const sizeStyles: Record<SelectSize, string> = {
     sm: "px-2 py-1 text-sm",
     md: "px-3 py-2 text-base",
     lg: "px-4 py-3 text-lg",
@@ -66,14 +63,6 @@ export default function Input({
     .filter(Boolean)
     .join(" ");
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (type === "cpf") e.target.value = maskCPF(e.target.value);
-    if (type === "phone") e.target.value = maskPhone(e.target.value);
-    if (type === "cep") e.target.value = maskCEP(e.target.value);
-
-    onChange?.(e);
-  }
-
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -81,19 +70,24 @@ export default function Input({
           {label}
         </label>
       )}
-      <input
+      <select
         id={name}
         name={name}
-        type={["cpf", "phone", "cep"].includes(type) ? "text" : type}
-        placeholder={placeholder}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         disabled={disabled}
         className={classes}
         required={required}
-        minLength={minLenght}
-        maxLength={maxLenght}
-      />
+      >
+        <option value="" disabled>
+          Selecione...
+        </option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

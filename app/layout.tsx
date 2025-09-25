@@ -35,7 +35,7 @@ export default async function RootLayout({
   const perfil = (session?.user?.perfil ?? "USUARIO").toUpperCase();
   const menuItems = [...baseItems, ...(roleItems[perfil] ?? [])];
 
-  console.log("SSR session =>", session?.user);
+  // console.log("SSR session =>", session?.user);
 
 
 

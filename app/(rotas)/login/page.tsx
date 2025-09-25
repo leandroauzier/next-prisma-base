@@ -10,12 +10,6 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <LoginForm />
-        <Button
-          label="Criar conta"
-          variant="outline"
-          className="w-full mt-2"
-          onClick={()=>{router.push("/cadastro")}}
-        />
       </div>
     </div>
   );

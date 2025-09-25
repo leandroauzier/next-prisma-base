@@ -71,6 +71,29 @@ export async function updateUser(id: string, input: UpdateUserInput) {
   const { senha, ...safeUser } = user;
   return safeUser;
 }
+export async function softDeleteUser(userId: string) {
+  const user = await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      deletadoEm: new Date(),
+    }
+  });
+
+  const { senha, ...safeUser } = user;
+  return safeUser;
+}
+export async function restoreUser(id: string) {
+  const user = await prisma.usuario.update({
+    where: { id },
+    data: {
+      deletadoEm: null,
+    },
+  });
+
+  const { senha, ...safeUser } = user;
+  return safeUser;
+}
+
 
 export async function deleteUser(currentUserId: string, targetUserId: string) {
   const currentUser = await prisma.usuario.findUnique({

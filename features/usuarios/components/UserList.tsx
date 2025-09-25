@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { canDelete } from "@/lib/permissions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { deleteUser, SafeUser } from "../services/userService";
+import { useState } from "react";
 import Swal from "sweetalert2";
+import { softDeleteUserAction, deleteUserAction, restoreDeletedUserAction } from "@/app/actions/user";
+import { SafeUser } from "../services/userService";
 import UserModal from "./UserModal"; // modal de criação
 
 export default function UserList({ users }: { users: SafeUser[] }) {
@@ -51,10 +52,10 @@ export default function UserList({ users }: { users: SafeUser[] }) {
     if (!confirm.isConfirmed) return;
 
     try {
-      const result = await deleteUser(currentUserId, userId);
+      const result = await deleteUserAction(currentUserId, userId);
       Swal.fire({
         icon: "success",
-        title: result.message,
+        title: "Usuário Deletado com sucesso",
         timer: 1500,
         showConfirmButton: false,
       });
@@ -64,6 +65,99 @@ export default function UserList({ users }: { users: SafeUser[] }) {
         icon: "error",
         title: "Erro interno",
         text: err.message ?? "Não foi possível excluir o usuário.",
+      });
+    }
+  }
+  async function handleSoftDelete(userId: string, userRole: string) {
+    const currentUserId = session?.user?.id;
+
+    if (!currentUserId) {
+      Swal.fire({
+        icon: "error",
+        title: "Sessão inválida",
+        text: "Não foi possível identificar o usuário logado.",
+      });
+      return;
+    }
+    if (userId === currentUserId) {
+      Swal.fire({
+        icon: "warning",
+        title: "Você não pode Desabilitar a si mesmo!",
+      });
+      return;
+    }
+
+    const confirm = await Swal.fire({
+      icon: "warning",
+      title: "Tem certeza?",
+      text: "O usuário ficará com o s status: Desabilitado",
+      showCancelButton: true,
+      confirmButtonText: "Sim, Desabilitar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await softDeleteUserAction(userId)
+      Swal.fire({
+        icon: "success",
+        title: "Usuário Desabilitado com sucesso",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      router.refresh();
+    } catch (err: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro interno",
+        text: err.message ?? "Não foi possível Desabilitado o usuário.",
+      });
+    }
+  }
+  async function handleRestore(userId: string, userRole: string) {
+    const currentUserId = session?.user?.id;
+
+    if (!currentUserId) {
+      Swal.fire({
+        icon: "error",
+        title: "Sessão inválida",
+        text: "Não foi possível identificar o usuário logado.",
+      });
+      return;
+    }
+    if (userId === currentUserId) {
+      Swal.fire({
+        icon: "warning",
+        title: "Você não pode restaurar a si mesmo!",
+      });
+      return;
+    }
+
+    const confirm = await Swal.fire({
+      icon: "warning",
+      title: "Tem certeza?",
+      showCancelButton: true,
+      confirmButtonText: "Sim, Restaurar usuário",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await restoreDeletedUserAction(userId)
+      Swal.fire({
+        icon: "success",
+        title: "Usuário Restaurado com sucesso",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      router.refresh();
+    } catch (err: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Erro interno",
+        text: err.message ?? "Não foi possível restaurar o usuário.",
       });
     }
   }
@@ -84,8 +178,11 @@ export default function UserList({ users }: { users: SafeUser[] }) {
       <UserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCreated={() => router.refresh()}
+        onSaved={() => {
+          router.refresh();
+        }}
       />
+
 
       {/* Tabela desktop */}
       <table className="hidden md:table border w-full">
@@ -93,32 +190,66 @@ export default function UserList({ users }: { users: SafeUser[] }) {
           <tr>
             <th className="border px-2 py-1 text-left">Nome</th>
             <th className="border px-2 py-1 text-left">Email</th>
+            <th className="border px-2 py-1 text-left">Habilitado</th>
             <th className="border px-2 py-1 text-left">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
-            <tr key={u.id} className="hover:bg-gray-50">
-              <td className="border px-2 py-1">{u.nome}</td>
-              <td className="border px-2 py-1">{u.email}</td>
-              <td className="border px-2 py-1 flex gap-2">
-                <Button
-                  label="Editar"
-                  onClick={() => router.push(`/usuarios/${u.id}`)}
-                  className="text-blue-500"
-                />
-                {canDelete(currentRole, (u.perfil as any) ?? "USUARIO") && (
+          {users.map((u) => {
+            const isDisabled = u.deletadoEm !== null;
+
+            return (
+              <tr
+                key={u.id}
+                className={`hover:bg-gray-50 ${isDisabled ? "opacity-50 bg-gray-300 hover:bg-gray-300" : ""
+                  }`}
+              >
+                <td className="border px-2 py-1">{u.nome}</td>
+                <td className="border px-2 py-1">{u.email}</td>
+                <td className="border px-2 py-1">
+                  {isDisabled ? (
+                    <span className="text-red-600 font-semibold">Não</span>
+                  ) : (
+                    <span className="text-green-600 font-semibold">Sim</span>
+                  )}
+                </td>
+                <td className="border px-2 py-1 flex gap-2">
                   <Button
-                    label="Deletar"
-                    onClick={() => handleDelete(u.id, u.perfil)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    label="Editar"
+                    onClick={() => router.push(`/usuarios/${u.id}`)}
+                    className="text-blue-500"
+                    disabled={isDisabled} // opcional: bloquear edição
                   />
-                )}
-              </td>
-            </tr>
-          ))}
+
+                  {canDelete(currentRole, (u.perfil as any) ?? "USUARIO") && (
+                    <Button
+                      label="Deletar"
+                      onClick={() => handleDelete(u.id, u.perfil)}
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                    />
+                  )}
+
+                  {canDelete(currentRole, (u.perfil as any) ?? "USUARIO") &&
+                    (isDisabled ? (
+                      <Button
+                        label="Restaurar"
+                        onClick={() => handleRestore(u.id, u.perfil)}
+                        className="bg-green-500 text-white px-2 py-1 rounded"
+                      />
+                    ) : (
+                      <Button
+                        label="Desabilitar"
+                        onClick={() => handleSoftDelete(u.id, u.perfil)}
+                        className="bg-yellow-500 text-white px-2 py-1 rounded"
+                      />
+                    ))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-    </div>
+
+    </div >
   );
 }

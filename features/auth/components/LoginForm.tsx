@@ -29,7 +29,7 @@ export default function LoginForm() {
 
       Toast.fire({
         icon: "error",
-        title: "Opps... " + res.error,
+        title: "Opps... " + "Email ou senha estão incorretos",
       });
     } else {
       const Toast = Swal.mixin({
