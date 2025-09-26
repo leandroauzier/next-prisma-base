@@ -36,9 +36,6 @@ export default async function RootLayout({
   const menuItems = [...baseItems, ...(roleItems[perfil] ?? [])];
 
   // console.log("SSR session =>", session?.user);
-
-
-
   return (
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}>

@@ -5,6 +5,9 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import Button from "@/components/ui/Button";
+import { LoginSchema } from "@/lib/schema/auth";
+import { z } from "zod";
+import { formatZodErrors } from "@/lib/schema/zodHelpers/zodErrorFormatter";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -14,37 +17,55 @@ export default function LoginForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    const result = LoginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const error = formatZodErrors(result.error)
+
+      Swal.fire({
+        icon: "error",
+        title: "Erro de validação",
+        html: `
+        <ul style="text-align:left">
+          ${error.properties?.email?.errors.map((msg) => `<li>${msg}</li>`).join("") ?? ""}
+          ${error.properties?.password?.errors.map((msg) => `<li>${msg}</li>`).join("") ?? ""}
+        </ul>
+        `,
+      });
+      return;
+    }
+
     const res = await signIn("credentials", {
-      redirect: false, // 🔑 evita redirecionamento automático
+      redirect: false,
       email,
       password,
     });
 
     if (res?.error) {
-      const Toast = Swal.mixin({
+      const swalError = Swal.mixin({
         toast: true,
-        position: "top-end",
-        showConfirmButton: true,
-      });
-
-      Toast.fire({
-        icon: "error",
-        title: "Opps... " + "Email ou senha estão incorretos",
-      });
-    } else {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
+        position: 'top-end',
         timer: 3000,
-        timerProgressBar: true,
+        timerProgressBar: true
       });
-
-      Toast.fire({
+      swalError.fire({
+        toast: true,
+        icon: "error",
+        text: "Email ou senha estão incorretos",
+        showConfirmButton: false,
+      })
+    } else {
+      const swalSuccess = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        timer: 1500,
+        timerProgressBar: true
+      });
+      swalSuccess.fire({
+        toast: true,
         icon: "success",
         title: "Login realizado com sucesso!",
-      });
-
+        showConfirmButton: false,
+      })
       router.push("/dashboard");
     }
   }
@@ -59,7 +80,6 @@ export default function LoginForm() {
           placeholder="Seu email"
           onChange={(e) => setEmail(e.target.value)}
           className="w-full border px-3 py-2 rounded-md"
-          required
         />
       </div>
 
@@ -71,7 +91,6 @@ export default function LoginForm() {
           placeholder="Sua Senha"
           onChange={(e) => setPassword(e.target.value)}
           className="w-full border px-3 py-2 rounded-md"
-          required
         />
       </div>
 

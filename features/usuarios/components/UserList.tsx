@@ -164,7 +164,6 @@ export default function UserList({ users }: { users: SafeUser[] }) {
 
   return (
     <div className="w-full">
-      {/* Header com botão de novo usuário */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">Lista de Usuários</h2>
         <Button
@@ -174,7 +173,6 @@ export default function UserList({ users }: { users: SafeUser[] }) {
         />
       </div>
 
-      {/* Modal de criação */}
       <UserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -189,6 +187,7 @@ export default function UserList({ users }: { users: SafeUser[] }) {
         <thead>
           <tr>
             <th className="border px-2 py-1 text-left">Nome</th>
+            <th className="border px-2 py-1 text-left">Perfil</th>
             <th className="border px-2 py-1 text-left">Email</th>
             <th className="border px-2 py-1 text-left">Habilitado</th>
             <th className="border px-2 py-1 text-left">Ações</th>
@@ -205,6 +204,7 @@ export default function UserList({ users }: { users: SafeUser[] }) {
                   }`}
               >
                 <td className="border px-2 py-1">{u.nome}</td>
+                <td className="border px-2 py-1">{u.perfil}</td>
                 <td className="border px-2 py-1">{u.email}</td>
                 <td className="border px-2 py-1">
                   {isDisabled ? (
@@ -218,7 +218,7 @@ export default function UserList({ users }: { users: SafeUser[] }) {
                     label="Editar"
                     onClick={() => router.push(`/usuarios/${u.id}`)}
                     className="text-blue-500"
-                    disabled={isDisabled} // opcional: bloquear edição
+                    disabled={isDisabled}
                   />
 
                   {canDelete(currentRole, (u.perfil as any) ?? "USUARIO") && (
