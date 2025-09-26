@@ -44,12 +44,14 @@ export async function getUsers(): Promise<SafeUser[]> {
   });
   return users.map((u: any) => sanitizeUser(u)!);
 }
-export async function getLastCreatedUsers() {
+export async function getUserByDate() {
   return prisma.usuario.findMany({
     orderBy: { criadoEm: "desc" },
     select: {
       nome: true,
       deletadoEm: true,
+      atualizadoEm: true,
+      ultimoLogin: true,
       criadoEm: true,
     }
   });

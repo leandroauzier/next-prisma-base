@@ -11,7 +11,7 @@ import {
   getUserById,
   softDeleteUser,
   restoreUser,
-  getLastCreatedUsers,
+  getUserByDate,
 } from "@/features/usuarios/services/userService";
 
 // POST ACTION
@@ -74,8 +74,8 @@ export { getUsers, getUserById };
 
 // =========================================================================================
 
-export async function getLastActiveUsers(){
-  const users = await getLastCreatedUsers();
+export async function getRecentlyCreatedUsers(){
+  const users = await getUserByDate();
   return users.filter((u) => u.deletadoEm === null)
   .slice(0, 10);
 }

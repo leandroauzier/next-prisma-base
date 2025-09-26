@@ -1,20 +1,41 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import DashboardCard from "@/features/dashboard/components/DashboardCard";
 import LineChartCard from "@/features/dashboard/components/LineChartCard";
 import BarChartCard from "@/features/dashboard/components/BarChartCard";
 import PieChartCard from "@/features/dashboard/components/PieChartCard";
 
+import { getRecentlyCreatedUsers } from "@/app/actions/user";
+import { parseDate } from "@/utils/Date/parseDate";
+import DashboardSection from "@/features/dashboard/components/DashboardSection";
+
 
 export default function Dashboard() {
+  const [lineData, setLineData] = useState<{ name: string; value: number }[]>([])
+  const [ultimoLoginData, setUltimoLoginData] = useState<string[][]>([])
 
-  const lineData = [
-    { name: "Jan", value: 400 },
-    { name: "Feb", value: 300 },
-    { name: "Mar", value: 600 },
-    { name: "Apr", value: 800 },
-    { name: "May", value: 500 },
-  ];
+  useEffect(() => {
+    (async () => {
+      const usuarios = await getRecentlyCreatedUsers();
+
+      const criadoFormatado = usuarios.map((u) => ({
+        name: u.nome,
+        value: parseDate(u.criadoEm).getTime(),
+      }));
+
+      const loginFormatado = usuarios.map((u) => [
+        u.nome,
+        new Date(
+          u.ultimoLogin ? u.ultimoLogin : u.atualizadoEm
+        ).toLocaleString("pt-BR"),
+      ]);
+
+      setLineData(criadoFormatado);
+      setUltimoLoginData(loginFormatado);
+    })();
+  }, []);
+
 
   const barData = [
     { name: "Curso A", value: 40 },
@@ -33,13 +54,29 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
       <p className="text-gray-600">Visão geral do sistema</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <DashboardSection
+        title="Acesso de usuários"
+        cols={2}
+        rounded="lg"
+        bgColor="gray200"
+      >
         <LineChartCard
           title="Cadastros Recentes"
-          description="Últimos 5 meses"
-          // data={lineData}
-          apiUrl=""
+          description="Ultimos 10 usuários"
+          data={lineData}
         />
+        <DashboardCard
+          type="table"
+          title="Últimos Logins"
+          data={{
+            headers: ["Usuário", "Data"],
+            rows: ultimoLoginData,
+          }}
+        />
+      </DashboardSection>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
         <BarChartCard
           title="Inscrições por Curso"
           description="Top 3 cursos"
@@ -60,18 +97,6 @@ export default function Dashboard() {
           type="chart"
           title="Atividade"
           data={[20, 50, 80, 40, 70]}
-        />
-        <DashboardCard
-          type="table"
-          title="Últimos Logins"
-          data={{
-            headers: ["Usuário", "Data"],
-            rows: [
-              ["Ana", "2025-09-10"],
-              ["Carlos", "2025-09-12"],
-              ["João", "2025-09-14"],
-            ],
-          }}
         />
       </div>
     </div>
