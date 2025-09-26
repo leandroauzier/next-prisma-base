@@ -35,7 +35,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <LineChartCard
-          title="Usuários Ativos"
+          title="Cadastros Recentes"
           description="Últimos 5 meses"
           // data={lineData}
           apiUrl=""

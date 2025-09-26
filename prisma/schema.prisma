@@ -8,16 +8,17 @@ datasource db {
 }
 
 model Usuario {
-  id        String   @id @default(uuid())
-  cpf       String   @unique
-  nome      String
-  email     String   @unique
-  telefone  String?
-  senha  String
-  perfil      Perfil     @default(USUARIO)
-  criadoEm DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
-  deletadoEm DateTime?
+  id           String    @id @default(uuid())
+  cpf          String    @unique
+  nome         String
+  email        String    @unique
+  telefone     String?
+  senha        String
+  perfil       Perfil    @default(USUARIO)
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  deletadoEm   DateTime?
+  ultimoLogin  DateTime?
 
   @@map("usuarios")
 }

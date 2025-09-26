@@ -44,6 +44,16 @@ export async function getUsers(): Promise<SafeUser[]> {
   });
   return users.map((u: any) => sanitizeUser(u)!);
 }
+export async function getLastCreatedUsers() {
+  return prisma.usuario.findMany({
+    orderBy: { criadoEm: "desc" },
+    select: {
+      nome: true,
+      deletadoEm: true,
+      criadoEm: true,
+    }
+  });
+}
 
 export async function getUserById(id: string): Promise<SafeUser | null> {
   const user = await prisma.usuario.findUnique({ where: { id } });

@@ -1,7 +1,9 @@
 "use client";
 
+import { getLastActiveUsers } from "@/app/actions/user";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import { parseDate } from "@/utils/Date/parseDate";
 import { useCallback, useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -35,16 +37,19 @@ export default function LineChartCard({
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch(apiUrl);
-      if (!res.ok) throw new Error("Erro ao buscar dados");
-      const json = await res.json();
-      setData(json);
+      const usuarios = await getLastActiveUsers();
+
+      const formatado = usuarios.map((u) => ({
+        name: u.nome,
+        value: parseDate(u.criadoEm).getTime(),
+      }))
+      setData(formatado);
     } catch (err: any) {
       setError(err.message || "Erro inesperado");
     } finally {
       setLoading(false);
     }
-  }, [apiUrl]);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -68,11 +73,22 @@ export default function LineChartCard({
           <ResponsiveContainer>
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
+              <XAxis
+                dataKey="value"
+                type="number"
+                domain={["dataMin", "dataMax"]}
+                tickFormatter={(value) => new Date(value).toLocaleDateString("pt-BR")}
+              />
+              <YAxis hide /> {/* se não quiser nada no Y */}
+              <Tooltip
+                labelFormatter={(value) =>
+                  new Date(value as number).toLocaleString("pt-BR")
+                }
+                formatter={(_, __, entry) => [`${entry.payload.name}`, "Usuário"]}
+              />
               <Line type="monotone" dataKey="value" stroke={color} strokeWidth={3} />
             </LineChart>
+
           </ResponsiveContainer>
         )}
       </div>

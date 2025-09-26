@@ -11,6 +11,7 @@ import {
   getUserById,
   softDeleteUser,
   restoreUser,
+  getLastCreatedUsers,
 } from "@/features/usuarios/services/userService";
 
 // POST ACTION
@@ -70,3 +71,11 @@ export async function deleteUserAction(currentUserId: string, targetUserId: stri
 
 // Helpers para páginas (se você precisar)
 export { getUsers, getUserById };
+
+// =========================================================================================
+
+export async function getLastActiveUsers(){
+  const users = await getLastCreatedUsers();
+  return users.filter((u) => u.deletadoEm === null)
+  .slice(0, 10);
+}
