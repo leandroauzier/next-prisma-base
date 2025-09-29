@@ -12,6 +12,7 @@ import {
   softDeleteUser,
   restoreUser,
   getUserByDate,
+  countUsers,
 } from "@/features/usuarios/services/userService";
 
 // POST ACTION
@@ -74,8 +75,18 @@ export { getUsers, getUserById };
 
 // =========================================================================================
 
-export async function getRecentlyCreatedUsers(){
-  const users = await getUserByDate();
+export async function getActiveUsers(){
+  const users = await getUsers();
   return users.filter((u) => u.deletadoEm === null)
   .slice(0, 10);
+}
+export async function getInactiveUsers(){
+  const users = await getUsers();
+  return users.filter((u) => u.deletadoEm !== null)
+  .slice(0, 10);
+}
+
+export async function getTotalOfUsers() {
+  const count = await countUsers()
+  return count;
 }

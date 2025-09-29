@@ -8,6 +8,16 @@ import {
   bgSlate,
   bgYellow
 } from "@/utils/bgColors";
+import {
+  textRed,
+  textBlue,
+  textGray,
+  textGreen,
+  textOrange,
+  textPurple,
+  textSlate,
+  textYellow
+} from "@/utils/textColors";
 
 export const bgColors = {
   ...bgGray,
@@ -23,6 +33,21 @@ export const bgColors = {
 } as const;
 
 export type BgColorKey = keyof typeof bgColors;
+
+export const textColors = {
+  ...textGray,
+  ...textBlue,
+  ...textRed,
+  ...textYellow,
+  ...textGreen,
+  ...textOrange,
+  ...textPurple,
+  ...textSlate,
+  white: "bg-white",
+  none: "",
+} as const;
+
+export type TextColorKey = keyof typeof textColors;
 
 export const roundedSizes = {
   none: "",
@@ -53,10 +78,10 @@ export const titleColors = {
 } as const;
 
 export const gridCols = {
-  1: "md:grid-cols-1",
-  2: "md:grid-cols-2",
-  3: "md:grid-cols-3",
-  4: "md:grid-cols-4",
-  5: "md:grid-cols-5",
-  6: "md:grid-cols-6",
+  1: "lg:grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+  6: "lg:grid-cols-6",
 } as const;

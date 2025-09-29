@@ -44,6 +44,11 @@ export async function getUsers(): Promise<SafeUser[]> {
   });
   return users.map((u: any) => sanitizeUser(u)!);
 }
+
+export async function countUsers(): Promise<number> {
+  const total = await prisma.usuario.count();
+  return total;
+}
 export async function getUserByDate() {
   return prisma.usuario.findMany({
     orderBy: { criadoEm: "desc" },

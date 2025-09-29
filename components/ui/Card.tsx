@@ -1,27 +1,20 @@
+import { textColors } from "@/utils/tailwindMaps";
 import React from "react";
 
 type CardProps = {
   title: string;
   value?: string | number;
-  color?: "blue" | "green" | "purple" | "red" | "gray";
+  color?: keyof typeof textColors
   description?: string;
   icon?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
 };
 
-const colors: Record<string, string> = {
-  blue: "text-blue-600",
-  green: "text-green-600",
-  purple: "text-purple-600",
-  red: "text-red-600",
-  gray: "text-gray-600",
-};
-
 export default function Card({
   title,
   value,
-  color = "blue",
+  color = "blue500",
   description,
   icon,
   children,
@@ -35,7 +28,9 @@ export default function Card({
       </div>
 
       {value !== undefined && (
-        <p className={`text-3xl font-bold ${colors[color]}`}>{value}</p>
+        <p className={`text-3xl font-bold ${textColors[color]}`}>
+          {value}
+        </p>
       )}
 
       {description && (

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 import Button from "@/components/ui/Button";
 import { LoginSchema } from "@/lib/schema/auth";
-import { z } from "zod";
 import { formatZodErrors } from "@/lib/schema/zodHelpers/zodErrorFormatter";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function LoginForm() {
   const router = useRouter();
