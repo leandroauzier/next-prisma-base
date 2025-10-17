@@ -1,5 +1,5 @@
 // lib/menuItems.tsx
-import { IconHome, IconUsers, IconDashboard, IconCode } from "@tabler/icons-react";
+import { IconHome, IconUsers, IconDashboard, IconCode, IconObjectScan } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
 export type MenuItem = {
@@ -11,6 +11,7 @@ export type MenuItem = {
 export const baseItems: MenuItem[] = [
   { label: "Início", href: "/", icon: <IconHome className="w-5 h-5" /> },
   { label: "Dashboard", href: "/dashboard", icon: <IconDashboard className="w-5 h-5" /> },
+  { label: "DocParser", href: "/docparser", icon: <IconObjectScan className="w-5 h-5" /> },
 ];
 
 export const roleItems: Record<string, MenuItem[]> = {

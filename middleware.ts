@@ -3,9 +3,9 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const rolePermissions: Record<string, string[]> = {
-  DESENVOLVEDOR: ["/perfil", "/usuarios", "/desenvolvedor"],
-  ADMINISTRADOR: ["/perfil", "/usuarios",],
-  USUARIO: ["/perfil"],
+  DESENVOLVEDOR: ["/perfil", "/usuarios", "/desenvolvedor", "/docparser"],
+  ADMINISTRADOR: ["/perfil", "/usuarios","/docparser"],
+  USUARIO: ["/perfil", "/docparser"],
 };
 
 export async function middleware(req: NextRequest) {
